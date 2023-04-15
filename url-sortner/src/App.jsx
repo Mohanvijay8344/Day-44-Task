@@ -1,48 +1,54 @@
-import { useState } from 'react';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import './App.css';
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import { SignUp } from "./SignUp";
+import { SignIn } from "./SignIn";
+import { Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
+import { Home } from "./Home";
+import { Forgot } from "./Forgot";
+import { Reset } from "./Reset";
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Shortener } from "./Shortener";
+
 
 function App() {
-  const [url, setUrl] = useState()
-  const [shortendUrl, setShortenedUrl] = useState('')
-
-  const shortenUrl = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(
-        `https://api.shrtco.de/v2/shorten?url=${url}`
-      )
-      const data = await response.json()
-      setShortenedUrl(data.result.full_short_link);
-    } catch (e) {
-      alert(e);
-    }
-  };
-
+  const navigate = useNavigate();
   return (
-    <div className="app">
-      <div className='shortener'>
-        <h2>URL shortener</h2>
-        {/* form to enter URL to be shortened */}
-        <form onSubmit={shortenUrl}>
-          <input
-            placeholder='Enter URL'
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}/>
-          <button>Submit</button>
-        </form>
-        {/* Section to view shortened URLS */}
-        {shortendUrl &&
-          <div className="shortener__viewShot">
-          {shortendUrl}
-          <CopyToClipboard text={shortendUrl}>
-            <button onClick={() => alert("The URL has been copied")}>copy</button>
-          </CopyToClipboard>
-        </div>
-        }
-      </div>
+    <div>
+      <AppBar className="App" sx={{ backgroundColor: "green" }}>
+          <Toolbar>
+            {/* <Button onClick={()=>navigate("/")} color="inherit">SIGNIN</Button> */}
+            <Button onClick={()=>navigate("/signup")} color="inherit">SIGNUP</Button>
+            <Button onClick={()=>navigate("/forgot-password")} color="inherit">FORGOT</Button>
+            <Button sx={{ marginLeft: "auto" }} onClick={() => localStorage.clear()} color="inherit">SIGNOUT</Button>
+          </Toolbar>
+      </AppBar>
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/home" element={<ProtectedRoute><Shortener /></ProtectedRoute>} />
+        <Route path="/forgot-password" element={<Forgot />} />
+        <Route path="/reset-password" element={<Reset />} />
+      </Routes>
     </div>
   );
+}
+
+function ProtectedRoute({children}){
+  const token = localStorage.getItem("token");
+  return token ? (
+    <section>{children}</section>
+  ) : (
+    <Navigate replace to="/" />
+  )
 }
 
 export default App;

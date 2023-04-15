@@ -1,7 +1,4 @@
-* {
-  box-sizing: border-box;
-  background-color: white;
-}
+
 .shortener {
   width: fit-content;
   margin: 0 auto;
@@ -43,4 +40,25 @@
 }
 .shortener__viewShot button:hover {
   color: rgb(64, 64, 66);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+}
+
+.form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 500px;
+  margin-top: 100px;
+}
+.app{
+  margin-top: 100px;
 }
